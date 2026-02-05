@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+  </head>
+
+  <body style="margin: 0; overflow: hidden">
+    <a-scene embedded arjs="sourceType: webcam; trackingMethod: best;">
+      <a-marker preset="hiro" id="hiroMarker">
+        <a-entity
+          id="myObject"
+          obj-model="obj: url(a.obj)"
+          rotate="0 90 0"
+          scale="2 2 2"
+        >
+        </a-entity>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <!-- <script>
+      const marker = document.querySelector("#hiroMarker");
+      const obj = document.querySelector("#myObject");
+      const scene = document.querySelector("a-scene");
+
+      let placed = false;
+      let anchoredObj = null;
+
+      marker.addEventListener("markerFound", () => {
+        if (placed) return;
+
+        scene.addEventListener(
+          "renderstart",
+          function capturePosition() {
+            // Obtener la matriz mundial del objeto
+            obj.object3D.updateMatrixWorld(true);
+
+            const position = new THREE.Vector3();
+            const rotation = new THREE.Euler();
+            const quaternion = new THREE.Quaternion();
+            const scale = new THREE.Vector3();
+
+            obj.object3D.matrixWorld.decompose(position, quaternion, scale);
+            rotation.setFromQuaternion(quaternion);
+
+            // Crear nuevo objeto anclado
+            anchoredObj = document.createElement("a-entity");
+            anchoredObj.setAttribute("obj-model", "obj: url(a.obj)");
+            anchoredObj.setAttribute(
+              "position",
+              `${position.x} ${position.y} ${position.z}`,
+            );
+            anchoredObj.setAttribute(
+              "rotation",
+              `${rotation.x / Math.PI} ${(rotation.y * 180) / Math.PI} ${(rotation.z * 180) / Math.PI}`,
+            );
+            anchoredObj.setAttribute("scale", "2 2 2");
+
+            scene.appendChild(anchoredObj);
+
+            // Ocultar el objeto del marcador
+            obj.parentNode.removeChild(obj);
+
+            placed = true;
+
+            scene.removeEventListener("renderstart", capturePosition);
+
+            console.log("Objeto anclado en:", position);
+          },
+          { once: true },
+        );
+      });
+    </script> -->
+  </body>
+</html>
