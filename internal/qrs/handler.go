@@ -1,4 +1,4 @@
-package qr
+package qrs
 
 import "github.com/gofiber/fiber/v2"
 
