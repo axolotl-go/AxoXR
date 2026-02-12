@@ -14,7 +14,6 @@ import (
 )
 
 func Create(c *fiber.Ctx) error {
-
 	userIDStr := c.FormValue("user_id")
 	userID, err := strconv.Atoi(userIDStr)
 	if err != nil {
