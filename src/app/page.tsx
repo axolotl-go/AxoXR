@@ -2,7 +2,7 @@
 import Button from "@/components/button";
 import Viewer from "@/utils/ThreeViewer";
 import { Canvas } from "@react-three/fiber";
-import { Fullscreen, QrCode } from "lucide-react";
+import { Fullscreen, Heart, QrCode } from "lucide-react";
 import { UploadZone } from "@/components/upload-zone";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +21,6 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-slate-900 dark:text-white leading-[1.1]">
             Experience your models in
             <span className="bg-linear-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
-              {" "}
               AxoXR
             </span>
           </h1>
@@ -34,7 +33,8 @@ export default function Home() {
             <Button
               size="lg"
               className="rounded-full px-8 shadow-xl shadow-primary/20"
-              href="/dashboard"
+              // href="/dashboard"
+              href="/signup"
             >
               Get Started
             </Button>
@@ -42,9 +42,9 @@ export default function Home() {
               variant="outline"
               size="lg"
               className="rounded-full px-8"
-              href="https://github.com/axoxr"
+              href="https://ko-fi.com/axolotdev"
             >
-              View on GitHub
+              Buy a Cofe <Heart className="ml-2 hover:text-red-600" />
             </Button>
           </div>
         </div>
@@ -114,7 +114,8 @@ export default function Home() {
             </div>
 
             <UploadZone
-              onFileSelect={(file) => router.push("/upload")}
+              //onFileSelect={(file) => router.push("/upload")}
+              onFileSelect={(file) => router.push("/signup")}
               className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-sm"
             />
           </div>

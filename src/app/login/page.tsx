@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const [Username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
@@ -33,28 +32,14 @@ export default function Page() {
             Welcome Back
           </h1>
           <p className="text-slate-500 dark:text-slate-400 text-lg">
-            Sign Up to manage your 3D assets
+            Log in to manage your 3D assets
           </p>
         </header>
+
         {/* Form Card */}
         <div className="glass-panel p-8 rounded-2xl shadow-2xl shadow-primary/5">
           <form onSubmit={handleLogin} className="space-y-6">
             {/* Email */}
-
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">
-                Username
-              </label>
-              <Input
-                type="text"
-                value={Username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="name example"
-                className="bg-white/50 dark:bg-black/20"
-                required
-              />
-            </div>
-
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">
                 Email Address
@@ -110,14 +95,15 @@ export default function Page() {
               className="w-full mt-4"
               isLoading={isLoading}
             >
-              Sign Up
+              Log In
             </Button>
           </form>
         </div>
+
         <p className="text-center text-sm text-slate-500 mt-8">
-          Do you have a account{" "}
-          <a href="/login" className="text-primary hover:underline">
-            Login
+          Do you dont have a account{" "}
+          <a href="/signup" className="text-primary hover:underline">
+            Sign Up
           </a>
         </p>
 
