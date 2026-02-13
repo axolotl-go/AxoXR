@@ -4,6 +4,8 @@ import (
 	"errors"
 	"net/mail"
 
+	"github.com/axolotl-go/AR/internal/auth"
+	"github.com/axolotl-go/AR/internal/db"
 	"github.com/axolotl-go/AR/internal/hash"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -86,9 +88,77 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
+	if !ComparePassword(user.Password, input.Password) {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid email or password",
+		})
+	}
+
+	token, err := auth.GenerateToken(user.ID, user.Email)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Could not generate token",
+		})
+	}
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Value:    token,
+		Path:     "/",
+		HTTPOnly: true,
+		Secure:   false,
+		SameSite: "None",
+		MaxAge:   60 * 60 * 24,
+	})
+
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"id":       user.ID,
 		"username": user.Username,
 		"email":    user.Email,
+		"token":    token,
+	})
+}
+
+func GetUserData(c *fiber.Ctx) error {
+	tokenString := c.Cookies("token")
+	if tokenString == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "No token provided",
+		})
+	}
+
+	claims, err := auth.ParserJwt(tokenString)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Invalid token",
+		})
+	}
+
+	var user User
+	if err := db.DB.Where("id = ?", claims["id"]).First(&user).Error; err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": "User not found",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"username": user.Username,
+		"email":    user.Email,
+	})
+}
+
+func Logout(c *fiber.Ctx) error {
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Value:    "",
+		Path:     "/",
+		MaxAge:   -1,
+		HTTPOnly: true,
+		Secure:   false,
+		SameSite: "None",
+	})
+
+	return c.JSON(fiber.Map{
+		"message": "Logged out successfully",
 	})
 }

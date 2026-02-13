@@ -16,7 +16,9 @@ func SetupRouter(app *fiber.App) {
 
 	// User
 	api.Post("/user", users.Create)
+	api.Get("/user", users.GetUserData)
 	api.Post("/login", users.Login)
+	api.Post("/logout", users.Logout)
 
 	// Models
 	api.Post("/models", models.Create)

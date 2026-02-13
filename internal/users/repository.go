@@ -2,6 +2,7 @@ package users
 
 import (
 	"github.com/axolotl-go/AR/internal/db"
+	"github.com/axolotl-go/AR/internal/hash"
 )
 
 func CheckUserExists(email string) bool {
@@ -26,4 +27,12 @@ func AuthenticateUser(email, password string) (*User, error) {
 	}
 
 	return &user, nil
+}
+
+func ComparePassword(hashed, password string) bool {
+	if !hash.Verify(hashed, password) {
+		return false
+	}
+
+	return true
 }

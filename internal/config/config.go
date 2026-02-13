@@ -34,7 +34,7 @@ func Load() *Config {
 
 func CorsConfig() cors.Config {
 	return cors.Config{
-		AllowOrigins:     "https://axoxr-8uvvyhaz1-axolotljdevs-projects.vercel.app/",
+		AllowOrigins:     "https://axoxr-8uvvyhaz1-axolotljdevs-projects.vercel.app,http://localhost:3000",
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowCredentials: true,
 	}
