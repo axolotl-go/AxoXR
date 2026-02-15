@@ -15,6 +15,7 @@ type Config struct {
 	DBToken     string
 	StoragePath string
 	StorageUrl  string
+	CorsOrigins string
 }
 
 func Load() *Config {
@@ -29,12 +30,19 @@ func Load() *Config {
 		DBToken:     os.Getenv("DB_TOKEN"),
 		StoragePath: os.Getenv("STORAGE_PATH"),
 		StorageUrl:  os.Getenv("STORAGE_URL"),
+		CorsOrigins: os.Getenv("CORS_ORIGINS"),
 	}
 }
 
 func CorsConfig() cors.Config {
+	var origins = Load().CorsOrigins
+
+	if origins == "" {
+		log.Fatal("CORS_ORIGINS is not set")
+	}
+
 	return cors.Config{
-		AllowOrigins:     "https://axoxr-8uvvyhaz1-axolotljdevs-projects.vercel.app,http://localhost:3000",
+		AllowOrigins:     origins,
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowCredentials: true,
 	}
