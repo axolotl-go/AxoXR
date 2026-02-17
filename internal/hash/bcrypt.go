@@ -1,11 +1,19 @@
 package hash
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"errors"
+
+	"golang.org/x/crypto/bcrypt"
+)
+
+var (
+	ErrInvalidPassword = errors.New("Password is not valid")
+)
 
 func Hash(text string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(text), bcrypt.DefaultCost)
 	if err != nil {
-		return "", err
+		return "", ErrInvalidPassword
 	}
 	return string(hash), nil
 }

@@ -16,7 +16,8 @@ func Create(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(&user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": err.Error(),
+			"error":  "Invalid request body",
+			"detail": err.Error(),
 		})
 	}
 
@@ -26,8 +27,7 @@ func Create(c *fiber.Ctx) error {
 		})
 	}
 
-	_, err := mail.ParseAddress(user.Email)
-	if err != nil {
+	if _, err := mail.ParseAddress(user.Email); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid email address",
 		})
@@ -35,7 +35,7 @@ func Create(c *fiber.Ctx) error {
 
 	if err := ValidatePassword(user.Password); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid password",
+			"error": err.Error(),
 		})
 	}
 
@@ -45,15 +45,17 @@ func Create(c *fiber.Ctx) error {
 		})
 	}
 
-	hashed, _ := hash.Hash(user.Password)
+	hashed, err := hash.Hash(user.Password)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Could not hash password",
+			"error": "Error hashing password",
 		})
 	}
+
 	user.Password = hashed
 
 	if err := CreateUser(&user); err != nil {
+
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
 			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 				"error": "User already exists",
@@ -61,11 +63,12 @@ func Create(c *fiber.Ctx) error {
 		}
 
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Could not create user",
+			"error": "Error creating user",
 		})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"message":  "User created successfully",
 		"id":       user.ID,
 		"username": user.Username,
 		"email":    user.Email,

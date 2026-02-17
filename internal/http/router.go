@@ -2,6 +2,7 @@ package http
 
 import (
 	"github.com/axolotl-go/AR/internal/models"
+	"github.com/axolotl-go/AR/internal/qrs"
 	"github.com/axolotl-go/AR/internal/users"
 	"github.com/gofiber/fiber/v2"
 )
@@ -19,6 +20,9 @@ func SetupRouter(app *fiber.App) {
 	api.Get("/user", users.GetUserData)
 	api.Post("/login", users.Login)
 	api.Post("/logout", users.Logout)
+
+	// QR
+	api.Post("/qr", qrs.Generate)
 
 	// Models
 	api.Post("/models", models.Create)

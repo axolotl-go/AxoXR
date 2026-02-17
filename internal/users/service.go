@@ -3,14 +3,13 @@ package users
 import "errors"
 
 var (
-	ErrInvalidPassword  = errors.New("invalid password")
-	ErrPasswordTooShort = errors.New("password must be at least 8 characters")
-	ErrMissingUpperCase = errors.New("password must contain uppercase letter")
+	ErrInvalidPassword = errors.New("Password must be at least 8 characters and contain uppercase letter")
+	ErrMissingFields   = errors.New("Missing required fields")
 )
 
 func ValidateUser(u User) error {
 	if u.Email == "" || u.Username == "" || u.Password == "" {
-		return errors.New("missing required fields")
+		return ErrMissingFields
 	}
 	return nil
 }
